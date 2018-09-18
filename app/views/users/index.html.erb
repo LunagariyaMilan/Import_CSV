@@ -1,0 +1,68 @@
+<div id="notice"></div>
+<h2>Import CSV</h2>
+<table id="demo" class="display">
+  <thead>
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Address
+      </th>
+      <th>
+        Mobile
+      </th>
+    </tr>
+  <thead>
+</table>
+<br>
+
+<%= form_tag import_users_path, multipart: true do %>
+  <%= file_field_tag :file, class: "form-control-file" %>
+  <%= submit_tag "Import" %>
+<% end %>
+
+<script>
+ var editor; // use a global for the submit and return data rendering in the examples
+        editor = new $.fn.dataTable.Editor( {
+        ajax: "../users.json",
+        table: "#demo",
+        idSrc:  'id',
+        fields: [ {
+                label: "First name:",
+                name: "a"
+            }, {
+                label: "Last name:",
+                name: "b"
+            }, {
+                label: "Position:",
+                name: "c"
+            }
+        ]
+    } );
+
+  $('#demo').on( 'click', 'tbody td', function (e) {
+      editor.inline( this );
+   } );
+
+    $('#demo').DataTable( {
+        dom: "Bfrtip",
+        ajax: "/users.json",
+        columns: [
+            { data: "a" },
+            { data: "b" },
+            { data: "c" }
+        ],
+        order: [ 1, 'asc' ],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
+        buttons: [
+            { extend: "create", editor: editor },
+            { extend: "edit",   editor: editor },
+            { extend: "remove", editor: editor }
+        ]
+    } );
+
+</script>
